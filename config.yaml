@@ -1,0 +1,5 @@
+mongodb:
+  uri: "mongodb://localhost:27017"
+  database: "env_db"
+  staticDemColl: "col_test"
+  dynamicColl: "col_test"
