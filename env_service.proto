@@ -1,0 +1,66 @@
+syntax = "proto3";
+
+package environmentdata;
+
+// Interface exported by the server.
+service EnvironmentData {
+
+  rpc GetStaticData(GetStaticDataRequest) returns (GetStaticDataResponse){}
+
+  rpc UpdateCrater(Crater) returns (CraterArea){}
+
+  rpc GetRoutePoints(StartStopPoints) returns (RoutePoints){}
+
+}
+
+message CraterArea{
+  string tileID = 1;
+}
+
+message Position{
+  double longitude = 1;
+  double latitude = 2;
+}
+
+message Area{
+  Position bottomleft = 1;
+  Position topright = 2;
+}
+
+message StaticData{
+ string tileID = 1;
+ bytes content = 2;
+}
+
+enum DataType{
+  ZERO = 0;
+  DEM = 1;
+  PBF = 2;
+}
+
+message Crater{
+  double width = 1;
+  double depth = 2;
+  Position pos = 3;
+}
+
+message GetStaticDataRequest {
+  Area area = 1;
+  int32 level = 3;
+  DataType dataType = 4;
+}
+
+
+message GetStaticDataResponse {
+ repeated StaticData data = 1;
+}
+
+message StartStopPoints {
+  Position start = 1;
+  Position end = 2;
+}
+
+message RoutePoints {
+  repeated Position pos = 1;
+}
+

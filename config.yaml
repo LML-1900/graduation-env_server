@@ -3,3 +3,4 @@ mongodb:
   database: "env_db"
   staticDemColl: "col_test"
   dynamicColl: "col_test"
+  craterColl: "craters"

@@ -5,13 +5,16 @@ import (
 	"env_server/data"
 	"fmt"
 	"github.com/spf13/viper"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 type MongoClient struct {
 	client        *mongo.Client
 	staticDemColl *mongo.Collection
 	dynamicColl   *mongo.Collection
+	craterColl    *mongo.Collection
 }
 
 func NewMongoClient(mongo *mongo.Client) *MongoClient {
@@ -20,6 +23,7 @@ func NewMongoClient(mongo *mongo.Client) *MongoClient {
 	databaseName := viper.GetString("mongodb.database")
 	mongoClinet.staticDemColl = mongo.Database(databaseName).Collection(viper.GetString("mongodb.staticDemColl"))
 	mongoClinet.dynamicColl = mongo.Database(databaseName).Collection(viper.GetString("mongodb.dynamicColl"))
+	mongoClinet.craterColl = mongo.Database(databaseName).Collection(viper.GetString("mongodb.craterColl"))
 	return &mongoClinet
 }
 
@@ -32,21 +36,13 @@ func (mongoClient *MongoClient) InsertDemData(demData data.DemData) error {
 	return nil
 }
 
-//func (mongoClient *MongoClient) PrintInfoByName(name string) error {
-//	var result bson.M
-//	err := mongoClient.staticColl.FindOne(context.TODO(), bson.D{{"name", name}}).Decode(&result)
-//	if err == mongo.ErrNoDocuments {
-//		fmt.Printf("No document was found with the name %s\n", name)
-//		return nil
-//	}
-//	if err != nil {
-//		return err
-//	}
-//
-//	jsonData, err := json.MarshalIndent(result, "", "    ")
-//	if err != nil {
-//		return err
-//	}
-//	fmt.Printf("%s\n", jsonData)
-//	return nil
-//}
+func (mongoClient *MongoClient) InsertCrater(crater data.Crater, tileId string) error {
+	filter := bson.D{{"tileId", tileId}}
+	update := bson.D{{"$push", bson.D{{"craters", crater}}}}
+	// set upsert to true, insert a new one if not exit
+	_, err := mongoClient.craterColl.UpdateOne(context.TODO(), filter, update, options.Update().SetUpsert(true))
+	if err != nil {
+		return err
+	}
+	return nil
+}

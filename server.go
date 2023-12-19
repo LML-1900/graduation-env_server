@@ -31,8 +31,20 @@ func main() {
 		}
 	}()
 
-	// new a inset data service
-	staticDataService := service.NewAddStaticDataService(mongoClient)
-	directoryPath := "/home/lml/env_server/11-736-158demData/11_736_158_WGS84_terrain"
-	staticDataService.ReadDirectory(directoryPath, data.DEM_DATA_TYPE)
+	// new an inset static data service
+	//staticDataService := service.NewAddStaticDataService(mongoClient)
+	//directoryPath := "/home/lml/env_server/11-736-158demData/11_736_158_WGS84_terrain"
+	//staticDataService.ReadDirectory(directoryPath, data.DEM_DATA_TYPE)
+
+	// new an insert dynamic data service
+	dynamicDataService := service.NewInsertDynamicDataService(mongoClient)
+	crater := data.Crater{
+		Position: data.LonLatPosition{Longitude: 113.34, Latitude: 23.78},
+		Width:    5.78,
+		Depth:    5.99,
+	}
+	err = dynamicDataService.InsertCrater(crater)
+	if err != nil {
+		fmt.Printf("fail to insert crater, err: %s\n", err)
+	}
 }
