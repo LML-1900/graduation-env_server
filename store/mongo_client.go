@@ -27,9 +27,11 @@ func NewMongoClient(mongo *mongo.Client) *MongoClient {
 	return &mongoClinet
 }
 
-func (mongoClient *MongoClient) GetStaticDemData(ctx context.Context, tileId string) (result data.DemData, err error) {
-	err = mongoClient.staticDemColl.FindOne(ctx, bson.D{{"tile_id", tileId}}).Decode(&result)
-	return result, err
+func (mongoClient *MongoClient) GetStaticDemData(ctx context.Context, tileIds []string) (results []data.DemData, err error) {
+	filter := bson.D{{"tile_id", bson.D{{"$in", tileIds}}}}
+	cursor, err := mongoClient.staticDemColl.Find(ctx, filter)
+	err = cursor.All(ctx, &results)
+	return results, err
 }
 
 func (mongoClient *MongoClient) InsertDemData(demData data.DemData) error {

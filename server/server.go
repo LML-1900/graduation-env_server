@@ -4,7 +4,6 @@ import (
 	"context"
 	pb "env_server/grpc_env_service"
 	"env_server/service"
-	"env_server/util"
 	"fmt"
 	"go.mongodb.org/mongo-driver/mongo"
 	"time"
@@ -26,15 +25,14 @@ func NewServer(mongoDB *mongo.Client) *EnvDataServer {
 
 func (s *EnvDataServer) GetStaticData(dataRequest *pb.GetStaticDataRequest, stream pb.EnvironmentData_GetStaticDataServer) error {
 	start := time.Now()
-	tileIds := util.LonLatAreaToTileIds(dataRequest.Area, int(dataRequest.Level))
-	for _, tileId := range tileIds {
-		content, err := s.staticDataService.GetStaticData(context.TODO(), tileId, dataRequest.DataType)
-		if err != nil {
-			return err
-		}
+	results, err := s.staticDataService.GetStaticData(context.TODO(), dataRequest)
+	if err != nil {
+		return err
+	}
+	for _, result := range results {
 		response := pb.GetStaticDataResponse{
-			TileID:  tileId,
-			Content: content,
+			TileID:  result.TileId,
+			Content: result.Content,
 		}
 		if err := stream.Send(&response); err != nil {
 			return err

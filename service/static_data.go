@@ -5,6 +5,7 @@ import (
 	"env_server/data"
 	pb "env_server/grpc_env_service"
 	"env_server/store"
+	"env_server/util"
 	"fmt"
 	"go.mongodb.org/mongo-driver/mongo"
 	"os"
@@ -23,11 +24,12 @@ func NewStaticDataService(mongo *mongo.Client) *StaticDataService {
 	return &staticDataService
 }
 
-func (staticDataService *StaticDataService) GetStaticData(ctx context.Context, tileId string, dataType pb.DataType) ([]byte, error) {
-	switch dataType {
+func (staticDataService *StaticDataService) GetStaticData(ctx context.Context, dataRequest *pb.GetStaticDataRequest) ([]data.DemData, error) {
+	tileIds := util.LonLatAreaToTileIds(dataRequest.Area, int(dataRequest.Level))
+	switch dataRequest.DataType {
 	case pb.DataType_DEM:
-		result, err := staticDataService.mongoDB.GetStaticDemData(ctx, tileId)
-		return result.Content, err
+		results, err := staticDataService.mongoDB.GetStaticDemData(ctx, tileIds)
+		return results, err
 	}
 	return nil, nil
 }
