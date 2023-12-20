@@ -2,6 +2,7 @@ package server
 
 import (
 	"context"
+	"env_server/data"
 	pb "env_server/grpc_env_service"
 	"env_server/service"
 	"fmt"
@@ -47,8 +48,20 @@ func (s *EnvDataServer) GetStaticData(dataRequest *pb.GetStaticDataRequest, stre
 	return nil
 }
 
-func (s *EnvDataServer) UpdateCrater(ctx context.Context, crater *pb.Crater) (*pb.CraterArea, error) {
-	return nil, nil
+func (s *EnvDataServer) UpdateCrater(ctx context.Context, crater *pb.Crater) (*pb.UpdateCraterResponse, error) {
+	newCrater := data.Crater{
+		Position: data.LonLatPosition{
+			Longitude: crater.Pos.Longitude,
+			Latitude:  crater.Pos.Latitude,
+		},
+		Depth: crater.Depth,
+		Width: crater.Width,
+	}
+	err := s.dynamicDataService.InsertCrater(newCrater)
+	if err != nil {
+		return nil, err
+	}
+	return &pb.UpdateCraterResponse{Message: "ok"}, nil
 }
 
 func (s *EnvDataServer) GetRoutePoints(ctx context.Context, points *pb.StartStopPoints) (*pb.RoutePoints, error) {

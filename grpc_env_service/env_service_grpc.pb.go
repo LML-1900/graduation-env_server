@@ -23,7 +23,7 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type EnvironmentDataClient interface {
 	GetStaticData(ctx context.Context, in *GetStaticDataRequest, opts ...grpc.CallOption) (EnvironmentData_GetStaticDataClient, error)
-	UpdateCrater(ctx context.Context, in *Crater, opts ...grpc.CallOption) (*CraterArea, error)
+	UpdateCrater(ctx context.Context, in *Crater, opts ...grpc.CallOption) (*UpdateCraterResponse, error)
 	GetRoutePoints(ctx context.Context, in *StartStopPoints, opts ...grpc.CallOption) (*RoutePoints, error)
 }
 
@@ -67,8 +67,8 @@ func (x *environmentDataGetStaticDataClient) Recv() (*GetStaticDataResponse, err
 	return m, nil
 }
 
-func (c *environmentDataClient) UpdateCrater(ctx context.Context, in *Crater, opts ...grpc.CallOption) (*CraterArea, error) {
-	out := new(CraterArea)
+func (c *environmentDataClient) UpdateCrater(ctx context.Context, in *Crater, opts ...grpc.CallOption) (*UpdateCraterResponse, error) {
+	out := new(UpdateCraterResponse)
 	err := c.cc.Invoke(ctx, "/env_data_service.EnvironmentData/UpdateCrater", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -90,7 +90,7 @@ func (c *environmentDataClient) GetRoutePoints(ctx context.Context, in *StartSto
 // for forward compatibility
 type EnvironmentDataServer interface {
 	GetStaticData(*GetStaticDataRequest, EnvironmentData_GetStaticDataServer) error
-	UpdateCrater(context.Context, *Crater) (*CraterArea, error)
+	UpdateCrater(context.Context, *Crater) (*UpdateCraterResponse, error)
 	GetRoutePoints(context.Context, *StartStopPoints) (*RoutePoints, error)
 	mustEmbedUnimplementedEnvironmentDataServer()
 }
@@ -102,7 +102,7 @@ type UnimplementedEnvironmentDataServer struct {
 func (UnimplementedEnvironmentDataServer) GetStaticData(*GetStaticDataRequest, EnvironmentData_GetStaticDataServer) error {
 	return status.Errorf(codes.Unimplemented, "method GetStaticData not implemented")
 }
-func (UnimplementedEnvironmentDataServer) UpdateCrater(context.Context, *Crater) (*CraterArea, error) {
+func (UnimplementedEnvironmentDataServer) UpdateCrater(context.Context, *Crater) (*UpdateCraterResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateCrater not implemented")
 }
 func (UnimplementedEnvironmentDataServer) GetRoutePoints(context.Context, *StartStopPoints) (*RoutePoints, error) {

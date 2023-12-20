@@ -8,14 +8,14 @@ service EnvironmentData {
 
   rpc GetStaticData(GetStaticDataRequest) returns (stream GetStaticDataResponse){}
 
-  rpc UpdateCrater(Crater) returns (CraterArea){}
+  rpc UpdateCrater(Crater) returns (UpdateCraterResponse){}
 
   rpc GetRoutePoints(StartStopPoints) returns (RoutePoints){}
 
 }
 
-message CraterArea{
-  string tileID = 1;
+message UpdateCraterResponse{
+  string message = 1;
 }
 
 message Position{
