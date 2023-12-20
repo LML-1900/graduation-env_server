@@ -27,6 +27,11 @@ func NewMongoClient(mongo *mongo.Client) *MongoClient {
 	return &mongoClinet
 }
 
+func (mongoClient *MongoClient) GetStaticDemData(ctx context.Context, tileId string) (result data.DemData, err error) {
+	err = mongoClient.staticDemColl.FindOne(ctx, bson.D{{"tile_id", tileId}}).Decode(&result)
+	return result, err
+}
+
 func (mongoClient *MongoClient) InsertDemData(demData data.DemData) error {
 	result, err := mongoClient.staticDemColl.InsertOne(context.TODO(), demData)
 	if err != nil {

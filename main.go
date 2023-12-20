@@ -2,12 +2,20 @@ package main
 
 import (
 	"context"
-	"env_server/data"
-	"env_server/service"
+	pb "env_server/grpc_env_service"
+	"env_server/server"
+	"flag"
 	"fmt"
 	"github.com/spf13/viper"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"google.golang.org/grpc"
+	"log"
+	"net"
+)
+
+var (
+	port = flag.Int("port", 50051, "The server port")
 )
 
 func main() {
@@ -36,15 +44,16 @@ func main() {
 	//directoryPath := "/home/lml/env_server/11-736-158demData/11_736_158_WGS84_terrain"
 	//staticDataService.ReadDirectory(directoryPath, data.DEM_DATA_TYPE)
 
-	// new an insert dynamic data service
-	dynamicDataService := service.NewInsertDynamicDataService(mongoClient)
-	crater := data.Crater{
-		Position: data.LonLatPosition{Longitude: 113.34, Latitude: 23.78},
-		Width:    5.78,
-		Depth:    5.99,
-	}
-	err = dynamicDataService.InsertCrater(crater)
+	flag.Parse()
+	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", *port))
 	if err != nil {
-		fmt.Printf("fail to insert crater, err: %s\n", err)
+		log.Fatalf("failed to listen: %v", err)
+	}
+	s := grpc.NewServer()
+	envDataServer := server.NewServer(mongoClient)
+	pb.RegisterEnvironmentDataServer(s, envDataServer)
+	log.Printf("server listening at %v", lis.Addr())
+	if err := s.Serve(lis); err != nil {
+		log.Fatalf("failed to serve: %v", err)
 	}
 }

@@ -1,11 +1,12 @@
 syntax = "proto3";
 
-package environmentdata;
+package env_data_service;
+option go_package = "env_server/grpc_env_service";
 
 // Interface exported by the server.
 service EnvironmentData {
 
-  rpc GetStaticData(GetStaticDataRequest) returns (GetStaticDataResponse){}
+  rpc GetStaticData(GetStaticDataRequest) returns (stream GetStaticDataResponse){}
 
   rpc UpdateCrater(Crater) returns (CraterArea){}
 
@@ -25,11 +26,6 @@ message Position{
 message Area{
   Position bottomleft = 1;
   Position topright = 2;
-}
-
-message StaticData{
- string tileID = 1;
- bytes content = 2;
 }
 
 enum DataType{
@@ -52,7 +48,8 @@ message GetStaticDataRequest {
 
 
 message GetStaticDataResponse {
- repeated StaticData data = 1;
+  string tileID = 1;
+  bytes content = 2;
 }
 
 message StartStopPoints {

@@ -1,7 +1,9 @@
 package service
 
 import (
+	"context"
 	"env_server/data"
+	pb "env_server/grpc_env_service"
 	"env_server/store"
 	"fmt"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -11,17 +13,26 @@ import (
 	"time"
 )
 
-type AddStaticDataService struct {
+type StaticDataService struct {
 	mongoDB *store.MongoClient
 }
 
-func NewAddStaticDataService(mongo *mongo.Client) *AddStaticDataService {
-	addStaticDataService := AddStaticDataService{}
-	addStaticDataService.mongoDB = store.NewMongoClient(mongo)
-	return &addStaticDataService
+func NewStaticDataService(mongo *mongo.Client) *StaticDataService {
+	staticDataService := StaticDataService{}
+	staticDataService.mongoDB = store.NewMongoClient(mongo)
+	return &staticDataService
 }
 
-func (staticDataService *AddStaticDataService) ReadDirectory(directoryPath string, fileType string) {
+func (staticDataService *StaticDataService) GetStaticData(ctx context.Context, tileId string, dataType pb.DataType) ([]byte, error) {
+	switch dataType {
+	case pb.DataType_DEM:
+		result, err := staticDataService.mongoDB.GetStaticDemData(ctx, tileId)
+		return result.Content, err
+	}
+	return nil, nil
+}
+
+func (staticDataService *StaticDataService) ReadDirectory(directoryPath string, fileType string) {
 	files, err := os.ReadDir(directoryPath)
 	if err != nil {
 		fmt.Printf("ImportDemData: fail to read directory, err: %s\n", err)
@@ -43,7 +54,7 @@ func (staticDataService *AddStaticDataService) ReadDirectory(directoryPath strin
 	}
 }
 
-func (staticDataService *AddStaticDataService) ImportDemData(filePath string) error {
+func (staticDataService *StaticDataService) ImportDemData(filePath string) error {
 	content, err := os.ReadFile(filePath)
 	if err != nil {
 		return err
