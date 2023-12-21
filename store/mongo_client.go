@@ -34,6 +34,13 @@ func (mongoClient *MongoClient) GetStaticDemData(ctx context.Context, tileIds []
 	return results, err
 }
 
+// test runtime code
+//func (mongoClient *MongoClient) GetOneStaticDemData(ctx context.Context, tileId string) (result data.DemData, err error) {
+//	filter := bson.D{{"tile_id", tileId}}
+//	err = mongoClient.staticDemColl.FindOne(ctx, filter).Decode(&result)
+//	return result, err
+//}
+
 func (mongoClient *MongoClient) InsertDemData(demData data.DemData) error {
 	result, err := mongoClient.staticDemColl.InsertOne(context.TODO(), demData)
 	if err != nil {

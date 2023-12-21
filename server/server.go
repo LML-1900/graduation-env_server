@@ -5,10 +5,8 @@ import (
 	"env_server/data"
 	pb "env_server/grpc_env_service"
 	"env_server/service"
-	"fmt"
 	"go.mongodb.org/mongo-driver/mongo"
 	"log"
-	"time"
 )
 
 type EnvDataServer struct {
@@ -28,7 +26,7 @@ func NewServer(mongoDB *mongo.Client, rabbitMq *RabbitMq) *EnvDataServer {
 }
 
 func (s *EnvDataServer) GetStaticData(dataRequest *pb.GetStaticDataRequest, stream pb.EnvironmentData_GetStaticDataServer) error {
-	start := time.Now()
+	//start := time.Now()
 	results, err := s.staticDataService.GetStaticData(context.TODO(), dataRequest)
 	if err != nil {
 		log.Printf("fail to get static data, err:%v\n", err)
@@ -44,12 +42,12 @@ func (s *EnvDataServer) GetStaticData(dataRequest *pb.GetStaticDataRequest, stre
 			return err
 		}
 	}
-	fmt.Printf("GetStaticData for {%v, %v}-{%v, %v} cost %v\n",
-		dataRequest.Area.Bottomleft.Longitude,
-		dataRequest.Area.Bottomleft.Latitude,
-		dataRequest.Area.Topright.Longitude,
-		dataRequest.Area.Topright.Latitude,
-		time.Now().Sub(start))
+	//fmt.Printf("GetStaticData for {%v, %v}-{%v, %v} cost %v\n",
+	//	dataRequest.Area.Bottomleft.Longitude,
+	//	dataRequest.Area.Bottomleft.Latitude,
+	//	dataRequest.Area.Topright.Longitude,
+	//	dataRequest.Area.Topright.Latitude,
+	//	time.Now().Sub(start))
 	return nil
 }
 

@@ -34,6 +34,23 @@ func (staticDataService *StaticDataService) GetStaticData(ctx context.Context, d
 	return nil, nil
 }
 
+// test runtime
+//func (staticDataService *StaticDataService) GetStaticData(ctx context.Context, dataRequest *pb.GetStaticDataRequest) ([]data.DemData, error) {
+//	tileIds := util.LonLatAreaToTileIds(dataRequest.Area, int(dataRequest.Level))
+//	results := make([]data.DemData, 0)
+//	switch dataRequest.DataType {
+//	case pb.DataType_DEM:
+//		for _, tileId := range tileIds {
+//			result, err := staticDataService.mongoDB.GetOneStaticDemData(ctx, tileId)
+//			if err != nil {
+//				return nil, err
+//			}
+//			results = append(results, result)
+//		}
+//	}
+//	return results, nil
+//}
+
 func (staticDataService *StaticDataService) ReadDirectory(directoryPath string, fileType string) {
 	files, err := os.ReadDir(directoryPath)
 	if err != nil {
