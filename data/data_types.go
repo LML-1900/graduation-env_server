@@ -10,12 +10,12 @@ type DemData struct {
 }
 
 type LonLatPosition struct {
-	Longitude float64 `bson:"longitude"`
-	Latitude  float64 `bson:"latitude"`
+	Longitude float64 `bson:"longitude" json:"longitude"`
+	Latitude  float64 `bson:"latitude" json:"latitude"`
 }
 
 type Crater struct {
 	Position LonLatPosition
-	Width    float64 `bson:"width"`
-	Depth    float64 `bson:"depth"`
+	Width    float64 `bson:"width" json:"width"`
+	Depth    float64 `bson:"depth" json:"depth"`
 }

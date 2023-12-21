@@ -6,6 +6,7 @@ import (
 	"env_server/server"
 	"flag"
 	"fmt"
+	amqp "github.com/rabbitmq/amqp091-go"
 	"github.com/spf13/viper"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -30,14 +31,31 @@ func main() {
 	uri := viper.GetString("mongodb.uri")
 	mongoClient, err := mongo.Connect(context.TODO(), options.Client().ApplyURI(uri))
 	if err != nil {
-		fmt.Printf("fail to new a Mongodb client!\n")
-		panic(err)
+		log.Fatalf("fail to new a Mongodb client!")
 	}
 	defer func() {
 		if err := mongoClient.Disconnect(context.TODO()); err != nil {
 			panic(err)
 		}
 	}()
+
+	// set rabbitmq
+	mq, err := server.CreateMessageQueue("dynamic_data_topic")
+	if err != nil {
+		log.Fatalf("failed to create message queue: %v", err)
+	}
+	defer func(Conn *amqp.Connection) {
+		err := Conn.Close()
+		if err != nil {
+
+		}
+	}(mq.Conn)
+	defer func(Ch *amqp.Channel) {
+		err := Ch.Close()
+		if err != nil {
+
+		}
+	}(mq.Ch)
 
 	// new an inset static data service
 	//staticDataService := service.NewAddStaticDataService(mongoClient)
@@ -50,7 +68,7 @@ func main() {
 		log.Fatalf("failed to listen: %v", err)
 	}
 	s := grpc.NewServer()
-	envDataServer := server.NewServer(mongoClient)
+	envDataServer := server.NewServer(mongoClient, mq)
 	pb.RegisterEnvironmentDataServer(s, envDataServer)
 	log.Printf("server listening at %v", lis.Addr())
 	if err := s.Serve(lis); err != nil {

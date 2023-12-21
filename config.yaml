@@ -4,3 +4,6 @@ mongodb:
   staticDemColl: "col_test"
   dynamicColl: "col_test"
   craterColl: "craters"
+
+rabbitmq:
+  url: "amqp://guest:guest@172.17.0.2:5672"

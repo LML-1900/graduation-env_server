@@ -7,6 +7,7 @@ import (
 	"env_server/service"
 	"fmt"
 	"go.mongodb.org/mongo-driver/mongo"
+	"log"
 	"time"
 )
 
@@ -14,12 +15,14 @@ type EnvDataServer struct {
 	pb.UnimplementedEnvironmentDataServer
 	dynamicDataService *service.DynamicDataService
 	staticDataService  *service.StaticDataService
+	mq                 *RabbitMq
 }
 
-func NewServer(mongoDB *mongo.Client) *EnvDataServer {
+func NewServer(mongoDB *mongo.Client, rabbitMq *RabbitMq) *EnvDataServer {
 	envDataServer := EnvDataServer{
 		dynamicDataService: service.NewDynamicDataService(mongoDB),
 		staticDataService:  service.NewStaticDataService(mongoDB),
+		mq:                 rabbitMq,
 	}
 	return &envDataServer
 }
@@ -28,6 +31,7 @@ func (s *EnvDataServer) GetStaticData(dataRequest *pb.GetStaticDataRequest, stre
 	start := time.Now()
 	results, err := s.staticDataService.GetStaticData(context.TODO(), dataRequest)
 	if err != nil {
+		log.Printf("fail to get static data, err:%v\n", err)
 		return err
 	}
 	for _, result := range results {
@@ -36,6 +40,7 @@ func (s *EnvDataServer) GetStaticData(dataRequest *pb.GetStaticDataRequest, stre
 			Content: result.Content,
 		}
 		if err := stream.Send(&response); err != nil {
+			log.Printf("grpc stream fail to send static data, err:%v\n", err)
 			return err
 		}
 	}
@@ -59,8 +64,10 @@ func (s *EnvDataServer) UpdateCrater(ctx context.Context, crater *pb.Crater) (*p
 	}
 	err := s.dynamicDataService.InsertCrater(newCrater)
 	if err != nil {
+		log.Printf("fail to insert crater, err:%v\n", err)
 		return nil, err
 	}
+	go s.mq.BroadCastCraters(newCrater)
 	return &pb.UpdateCraterResponse{Message: "ok"}, nil
 }
 

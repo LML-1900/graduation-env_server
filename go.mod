@@ -3,6 +3,7 @@ module env_server
 go 1.21
 
 require (
+	github.com/rabbitmq/amqp091-go v1.9.0
 	github.com/spf13/viper v1.18.1
 	go.mongodb.org/mongo-driver v1.13.1
 	google.golang.org/grpc v1.59.0
