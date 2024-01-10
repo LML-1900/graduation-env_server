@@ -3,6 +3,8 @@ module env_server
 go 1.21
 
 require (
+	github.com/gojuno/go.osrm v0.1.0
+	github.com/paulmach/go.geo v0.0.0-20180829195134-22b514266d33
 	github.com/spf13/viper v1.18.1
 	go.mongodb.org/mongo-driver v1.13.1
 	google.golang.org/grpc v1.59.0
@@ -18,6 +20,7 @@ require (
 	github.com/magiconair/properties v1.8.7 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/montanaflynn/stats v0.0.0-20171201202039-1bf9dbcd8cbe // indirect
+	github.com/paulmach/go.geojson v1.4.0 // indirect
 	github.com/pelletier/go-toml/v2 v2.1.0 // indirect
 	github.com/sagikazarmark/locafero v0.4.0 // indirect
 	github.com/sagikazarmark/slog-shim v0.1.0 // indirect

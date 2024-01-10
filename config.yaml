@@ -4,3 +4,9 @@ mongodb:
   staticDemColl: "col_test"
   dynamicColl: "col_test"
   craterColl: "craters"
+
+osrm_routing:
+  url: "http://127.0.0.1:5000"
+#  url: "https://router.project-osrm.org"
+  csv_file_name: "/home/lml/OSRM/updates.csv"
+  map_name: "/home/lml/OSRM/map/zhuhai-custom/zhuhai.osrm"
