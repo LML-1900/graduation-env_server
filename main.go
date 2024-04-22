@@ -13,11 +13,13 @@ import (
 	"google.golang.org/grpc"
 	"log"
 	"net"
+	"os"
+	"strconv"
 )
 
-var (
-	port = flag.Int("port", 50051, "The server port")
-)
+//var (
+//	port = flag.Int("port", 50051, "The server port")
+//)
 
 func main() {
 	// set viper
@@ -27,9 +29,23 @@ func main() {
 		panic(fmt.Errorf("Fatal error config file: %s \n", err))
 	}
 
+	// port
+	portEnv := os.Getenv("SERVER_PORT")
+	if portEnv == "" {
+		portEnv = "50052"
+	}
+	port, err := strconv.Atoi(portEnv)
+	if err != nil {
+		log.Fatalf("Invalid port numver: %v", err)
+	}
+
+	// mongodbUri
+	mongoURI := os.Getenv("MONGO_URI")
+	if mongoURI == "" {
+		mongoURI = viper.GetString("mongodb.uri")
+	}
 	// set mongodb
-	uri := viper.GetString("mongodb.uri")
-	mongoClient, err := mongo.Connect(context.TODO(), options.Client().ApplyURI(uri))
+	mongoClient, err := mongo.Connect(context.TODO(), options.Client().ApplyURI(mongoURI))
 	if err != nil {
 		log.Fatalf("fail to new a Mongodb client!")
 	}
@@ -39,8 +55,19 @@ func main() {
 		}
 	}()
 
+	// 立即检查连接是否成功
+	err = mongoClient.Ping(context.TODO(), nil)
+	if err != nil {
+		log.Fatal("Failed to connect to MongoDB:", err)
+	}
+
+	// rabbitmq uri
+	rabbitmqURI := os.Getenv("RABBITMQ_URI")
+	if rabbitmqURI == "" {
+		rabbitmqURI = viper.GetString("rabbitmq.url")
+	}
 	// set rabbitmq
-	mq, err := server.CreateMessageQueue("dynamic_data_topic")
+	mq, err := server.CreateMessageQueue("dynamic_data_topic", rabbitmqURI)
 	if err != nil {
 		log.Fatalf("failed to create message queue: %v", err)
 	}
@@ -63,7 +90,7 @@ func main() {
 	//staticDataService.ReadDirectory(directoryPath, data.DEM_DATA_TYPE)
 
 	flag.Parse()
-	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", *port))
+	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", port))
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}

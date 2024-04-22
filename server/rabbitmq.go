@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"env_server/data"
 	amqp "github.com/rabbitmq/amqp091-go"
-	"github.com/spf13/viper"
 	"log"
 	"time"
 )
@@ -16,8 +15,7 @@ type RabbitMq struct {
 	qname string
 }
 
-func CreateMessageQueue(qname string) (*RabbitMq, error) {
-	url := viper.GetString("rabbitmq.url")
+func CreateMessageQueue(qname string, url string) (*RabbitMq, error) {
 	conn, err := amqp.Dial(url)
 	if err != nil {
 		log.Fatalf("fail to connect to RabbitMQ, err:%v", err)
