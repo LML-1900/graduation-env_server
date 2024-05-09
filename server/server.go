@@ -24,12 +24,12 @@ type EnvDataServer struct {
 	osrmClient         *osrm.OSRM
 }
 
-func NewServer(mongoDB *mongo.Client, rabbitMq *RabbitMq) *EnvDataServer {
+func NewServer(mongoDB *mongo.Client, rabbitMq *RabbitMq, osrmURL string) *EnvDataServer {
 	envDataServer := EnvDataServer{
 		dynamicDataService: service.NewDynamicDataService(mongoDB),
 		staticDataService:  service.NewStaticDataService(mongoDB),
 		mq:                 rabbitMq,
-		osrmClient:         osrm.NewFromURL(viper.GetString("osrm_routing.url")),
+		osrmClient:         osrm.NewFromURL(osrmURL),
 	}
 	return &envDataServer
 }

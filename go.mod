@@ -5,6 +5,7 @@ go 1.21
 require (
 	github.com/gojuno/go.osrm v0.1.0
 	github.com/paulmach/go.geo v0.0.0-20180829195134-22b514266d33
+	github.com/rabbitmq/amqp091-go v1.10.0
 	github.com/spf13/viper v1.18.1
 	go.mongodb.org/mongo-driver v1.13.1
 	google.golang.org/grpc v1.59.0

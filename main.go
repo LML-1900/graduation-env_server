@@ -44,6 +44,11 @@ func main() {
 	if mongoURI == "" {
 		mongoURI = viper.GetString("mongodb.uri")
 	}
+
+	osrmURL := os.Getenv("OSRM_URI")
+	if osrmURL == "" {
+		osrmURL = viper.GetString("osrm_routing.url")
+	}
 	// set mongodb
 	mongoClient, err := mongo.Connect(context.TODO(), options.Client().ApplyURI(mongoURI))
 	if err != nil {
@@ -121,7 +126,7 @@ func main() {
 		log.Fatalf("failed to listen: %v", err)
 	}
 	s := grpc.NewServer()
-	envDataServer := server.NewServer(mongoClient, mq)
+	envDataServer := server.NewServer(mongoClient, mq, osrmURL)
 	pb.RegisterEnvironmentDataServer(s, envDataServer)
 	log.Printf("server listening at %v", lis.Addr())
 	if err := s.Serve(lis); err != nil {
