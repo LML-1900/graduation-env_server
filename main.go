@@ -2,13 +2,16 @@ package main
 
 import (
 	"context"
-	"env_server/data"
+	pb "env_server/grpc_env_service"
 	"env_server/server"
 	"flag"
 	"fmt"
 	"github.com/spf13/viper"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"google.golang.org/grpc"
+	"log"
+	"net"
 )
 
 var (
@@ -42,7 +45,7 @@ func main() {
 	//staticDataService.ReadDirectory(directoryPath, data.DEM_DATA_TYPE)
 
 	// new an osrm test service
-	osrmserver := server.NewServer(mongoClient)
+	//osrmserver := server.NewServer(mongoClient)
 
 	// test routing function
 	//points := pb.StartStopPoints{
@@ -60,23 +63,23 @@ func main() {
 	//osrmserver.GetRoutes(ctx, &points)
 
 	// test add obstacle function
-	point := data.LonLatPosition{
-		Longitude: 113.542676,
-		Latitude:  22.217951,
-	}
-	osrmserver.AddObstacle(point)
-	server.OSRMReCustomize()
+	//point := data.LonLatPosition{
+	//	Longitude: 113.542676,
+	//	Latitude:  22.217951,
+	//}
+	//osrmserver.AddObstacle(point)
+	//server.OSRMReCustomize()
 
-	//flag.Parse()
-	//lis, err := net.Listen("tcp", fmt.Sprintf(":%d", *port))
-	//if err != nil {
-	//	log.Fatalf("failed to listen: %v", err)
-	//}
-	//s := grpc.NewServer()
-	//envDataServer := server.NewServer(mongoClient)
-	//pb.RegisterEnvironmentDataServer(s, envDataServer)
-	//log.Printf("server listening at %v", lis.Addr())
-	//if err := s.Serve(lis); err != nil {
-	//	log.Fatalf("failed to serve: %v", err)
-	//}
+	flag.Parse()
+	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", *port))
+	if err != nil {
+		log.Fatalf("failed to listen: %v", err)
+	}
+	s := grpc.NewServer()
+	envDataServer := server.NewServer(mongoClient)
+	pb.RegisterEnvironmentDataServer(s, envDataServer)
+	log.Printf("server listening at %v", lis.Addr())
+	if err := s.Serve(lis); err != nil {
+		log.Fatalf("failed to serve: %v", err)
+	}
 }
