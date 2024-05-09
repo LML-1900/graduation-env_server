@@ -89,6 +89,32 @@ func main() {
 	//directoryPath := "/home/lml/env_server/11-736-158demData/11_736_158_WGS84_terrain"
 	//staticDataService.ReadDirectory(directoryPath, data.DEM_DATA_TYPE)
 
+	// new an osrm test service
+	//osrmserver := server.NewServer(mongoClient)
+
+	// test routing function
+	//points := pb.StartStopPoints{
+	//	Start: &pb.Position{
+	//		Longitude: 113.5439372,
+	//		Latitude:  22.2180642,
+	//	},
+	//	End: &pb.Position{
+	//		Longitude: 113.5425177,
+	//		Latitude:  22.2252363,
+	//	},
+	//}
+	//ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second) // Adjust timeout as needed
+	//defer cancel()
+	//osrmserver.GetRoutes(ctx, &points)
+
+	// test add obstacle function
+	//point := data.LonLatPosition{
+	//	Longitude: 113.542676,
+	//	Latitude:  22.217951,
+	//}
+	//osrmserver.AddObstacle(point)
+	//server.OSRMReCustomize()
+
 	flag.Parse()
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", port))
 	if err != nil {
