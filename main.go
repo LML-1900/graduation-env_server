@@ -95,7 +95,7 @@ func main() {
 	//staticDataService.ReadDirectory(directoryPath, data.DEM_DATA_TYPE)
 
 	// new an osrm test service
-	//osrmserver := server.NewServer(mongoClient)
+	//osrmserver := server.NewServer(mongoClient, mq, osrmURL)
 
 	// test routing function
 	//points := pb.StartStopPoints{
@@ -112,13 +112,13 @@ func main() {
 	//defer cancel()
 	//osrmserver.GetRoutes(ctx, &points)
 
-	// test add obstacle function
+	//test add obstacle function
 	//point := data.LonLatPosition{
-	//	Longitude: 113.542676,
-	//	Latitude:  22.217951,
+	//	Longitude: 113.398498,
+	//	Latitude:  22.181448,
 	//}
 	//osrmserver.AddObstacle(point)
-	//server.OSRMReCustomize()
+	//server.OSRMUpdateRoadNetwork()
 
 	flag.Parse()
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", port))

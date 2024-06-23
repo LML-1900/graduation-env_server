@@ -19,3 +19,8 @@ type Crater struct {
 	Width    float64 `bson:"width" json:"width"`
 	Depth    float64 `bson:"depth" json:"depth"`
 }
+
+type Obstacle struct {
+	Position LonLatPosition
+	Cause    string
+}

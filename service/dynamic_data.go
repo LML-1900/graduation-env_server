@@ -23,3 +23,8 @@ func (dynamicDataService *DynamicDataService) InsertCrater(crater data.Crater) e
 	tileId := util.LonLatPositionToTileId(crater.Position, LEVEL)
 	return dynamicDataService.mongoDB.InsertCrater(crater, tileId)
 }
+
+func (dynamicDataService *DynamicDataService) InsertObstacle(obstacle data.Obstacle) error {
+	tileId := util.LonLatPositionToTileId(obstacle.Position, LEVEL)
+	return dynamicDataService.mongoDB.InsertObstacle(obstacle, tileId)
+}

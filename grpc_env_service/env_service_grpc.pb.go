@@ -24,6 +24,7 @@ const _ = grpc.SupportPackageIsVersion7
 type EnvironmentDataClient interface {
 	GetStaticData(ctx context.Context, in *GetStaticDataRequest, opts ...grpc.CallOption) (EnvironmentData_GetStaticDataClient, error)
 	UpdateCrater(ctx context.Context, in *Crater, opts ...grpc.CallOption) (*UpdateCraterResponse, error)
+	UpdateObstacle(ctx context.Context, in *Obstacle, opts ...grpc.CallOption) (*UpdateObstacleResponse, error)
 	GetRoutePoints(ctx context.Context, in *StartStopPoints, opts ...grpc.CallOption) (*RoutePoints, error)
 }
 
@@ -76,6 +77,15 @@ func (c *environmentDataClient) UpdateCrater(ctx context.Context, in *Crater, op
 	return out, nil
 }
 
+func (c *environmentDataClient) UpdateObstacle(ctx context.Context, in *Obstacle, opts ...grpc.CallOption) (*UpdateObstacleResponse, error) {
+	out := new(UpdateObstacleResponse)
+	err := c.cc.Invoke(ctx, "/env_data_service.EnvironmentData/UpdateObstacle", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *environmentDataClient) GetRoutePoints(ctx context.Context, in *StartStopPoints, opts ...grpc.CallOption) (*RoutePoints, error) {
 	out := new(RoutePoints)
 	err := c.cc.Invoke(ctx, "/env_data_service.EnvironmentData/GetRoutePoints", in, out, opts...)
@@ -91,6 +101,7 @@ func (c *environmentDataClient) GetRoutePoints(ctx context.Context, in *StartSto
 type EnvironmentDataServer interface {
 	GetStaticData(*GetStaticDataRequest, EnvironmentData_GetStaticDataServer) error
 	UpdateCrater(context.Context, *Crater) (*UpdateCraterResponse, error)
+	UpdateObstacle(context.Context, *Obstacle) (*UpdateObstacleResponse, error)
 	GetRoutePoints(context.Context, *StartStopPoints) (*RoutePoints, error)
 	mustEmbedUnimplementedEnvironmentDataServer()
 }
@@ -104,6 +115,9 @@ func (UnimplementedEnvironmentDataServer) GetStaticData(*GetStaticDataRequest, E
 }
 func (UnimplementedEnvironmentDataServer) UpdateCrater(context.Context, *Crater) (*UpdateCraterResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateCrater not implemented")
+}
+func (UnimplementedEnvironmentDataServer) UpdateObstacle(context.Context, *Obstacle) (*UpdateObstacleResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateObstacle not implemented")
 }
 func (UnimplementedEnvironmentDataServer) GetRoutePoints(context.Context, *StartStopPoints) (*RoutePoints, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetRoutePoints not implemented")
@@ -160,6 +174,24 @@ func _EnvironmentData_UpdateCrater_Handler(srv interface{}, ctx context.Context,
 	return interceptor(ctx, in, info, handler)
 }
 
+func _EnvironmentData_UpdateObstacle_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Obstacle)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(EnvironmentDataServer).UpdateObstacle(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/env_data_service.EnvironmentData/UpdateObstacle",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(EnvironmentDataServer).UpdateObstacle(ctx, req.(*Obstacle))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _EnvironmentData_GetRoutePoints_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(StartStopPoints)
 	if err := dec(in); err != nil {
@@ -188,6 +220,10 @@ var EnvironmentData_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateCrater",
 			Handler:    _EnvironmentData_UpdateCrater_Handler,
+		},
+		{
+			MethodName: "UpdateObstacle",
+			Handler:    _EnvironmentData_UpdateObstacle_Handler,
 		},
 		{
 			MethodName: "GetRoutePoints",

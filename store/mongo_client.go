@@ -47,7 +47,18 @@ func (mongoClient *MongoClient) InsertCrater(crater data.Crater, tileId string) 
 	filter := bson.D{{"tileId", tileId}}
 	update := bson.D{{"$push", bson.D{{"craters", crater}}}}
 	// set upsert to true, insert a new one if not exit
-	_, err := mongoClient.craterColl.UpdateOne(context.TODO(), filter, update, options.Update().SetUpsert(true))
+	_, err := mongoClient.dynamicColl.UpdateOne(context.TODO(), filter, update, options.Update().SetUpsert(true))
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (mongoClient *MongoClient) InsertObstacle(obstacle data.Obstacle, tileId string) error {
+	filter := bson.D{{"tileId", tileId}}
+	update := bson.D{{"$push", bson.D{{"obstacles", obstacle}}}}
+	// set upsert to true, insert a new one if not exit
+	_, err := mongoClient.dynamicColl.UpdateOne(context.TODO(), filter, update, options.Update().SetUpsert(true))
 	if err != nil {
 		return err
 	}

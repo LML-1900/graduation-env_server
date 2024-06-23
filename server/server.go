@@ -143,6 +143,27 @@ func (s *EnvDataServer) GetRoutes(ctx context.Context, points *pb.StartStopPoint
 	}
 }
 
+func (s *EnvDataServer) UpdateObstacle(ctx context.Context, obstacle *pb.Obstacle) (*pb.UpdateObstacleResponse, error) {
+	newObstacle := data.Obstacle{
+		Position: data.LonLatPosition{
+			Longitude: obstacle.Pos.Longitude,
+			Latitude:  obstacle.Pos.Latitude,
+		},
+		Cause: obstacle.Cause,
+	}
+	err := s.dynamicDataService.InsertObstacle(newObstacle)
+	if err != nil {
+		log.Printf("fail to insert crater, err:%v\n", err)
+		return nil, err
+	}
+	// asynchronously update road network
+	go func() {
+		s.AddObstacle(newObstacle.Position)
+		s.OSRMUpdateRoadNetwork()
+	}()
+	return &pb.UpdateObstacleResponse{Message: "ok"}, nil
+}
+
 func (s *EnvDataServer) AddObstacle(position data.LonLatPosition) {
 	// get nearest nodes IDs
 	resp, err := s.osrmClient.Nearest(context.TODO(), osrm.NearestRequest{
@@ -198,10 +219,19 @@ func (s *EnvDataServer) AddObstacle(position data.LonLatPosition) {
 
 }
 
-func OSRMReCustomize() {
+func (s *EnvDataServer) OSRMUpdateRoadNetwork() {
 	// run re-customize command
-	cmd := exec.Command("osrm-customize", viper.GetString("osrm_routing.map_name"), "--segment-speed-file", viper.GetString("osrm_routing.csv_file_name"))
-	output, err := cmd.CombinedOutput()
+	//cmd := exec.Command("osrm-customize", viper.GetString("osrm_routing.map_name"), "--segment-speed-file", viper.GetString("osrm_routing.csv_file_name"))
+	customizeCmd := exec.Command("/home/lml/graduation/osrm_new/osrm-backend/build/osrm-customize", viper.GetString("osrm_routing.map_name"), "--segment-speed-file", viper.GetString("osrm_routing.csv_file_name"), "--incremental=true")
+	output, err := customizeCmd.CombinedOutput()
+	if err != nil {
+		fmt.Println("Error executing command:", err)
+		fmt.Println(string(output))
+		return
+	}
+	// reload map
+	reloadCmd := exec.Command("/home/lml/graduation/osrm_new/osrm-backend/build/osrm-datastore", viper.GetString("osrm_routing.map_name"))
+	output, err = reloadCmd.CombinedOutput()
 	if err != nil {
 		fmt.Println("Error executing command:", err)
 		fmt.Println(string(output))

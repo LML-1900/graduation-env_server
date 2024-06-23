@@ -5,9 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5fff929a-b09e-4c5d-a686-1102ec8f3840" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/config.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/data_types.go" beforeDir="false" afterPath="$PROJECT_DIR$/data/data_types.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/grpc_env_service/env_service.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/grpc_env_service/env_service.pb.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/grpc_env_service/env_service.proto" beforeDir="false" afterPath="$PROJECT_DIR$/grpc_env_service/env_service.proto" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/grpc_env_service/env_service_grpc.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/grpc_env_service/env_service_grpc.pb.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/rabbitmq.go" beforeDir="false" afterPath="$PROJECT_DIR$/server/rabbitmq.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/server.go" beforeDir="false" afterPath="$PROJECT_DIR$/server/server.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/dynamic_data.go" beforeDir="false" afterPath="$PROJECT_DIR$/service/dynamic_data.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/store/mongo_client.go" beforeDir="false" afterPath="$PROJECT_DIR$/store/mongo_client.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -25,7 +32,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="feature/broadcast_craters" />
+        <entry key="$PROJECT_DIR$" value="master" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -49,9 +56,9 @@
     "RunOnceActivity.go.migrated.go.modules.settings": "true",
     "RunOnceActivity.go.modules.automatic.dependencies.download": "true",
     "RunOnceActivity.go.modules.go.list.on.any.changes.was.set": "true",
-    "git-widget-placeholder": "master",
+    "git-widget-placeholder": "test/osrm__routing",
     "go.import.settings.migrated": "true",
-    "last_opened_file_path": "/home/lml/graduation/stress_test",
+    "last_opened_file_path": "/home/lml/graduation/env_middleware",
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
@@ -126,16 +133,5 @@
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/server/server.go</url>
-          <line>31</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>

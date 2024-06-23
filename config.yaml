@@ -1,16 +1,16 @@
 mongodb:
 #  uri: "mongodb://127.0.0.1:27018,127.0.0.1:27019,127.0.0.1:27020/?replicaSet=myReplicaSet"
-  uri: "mongodb://10.134.92.104:27017"
+  uri: "mongodb://localhost:27017"
   database: "env_db"
   staticDemColl: "col_test"
-  dynamicColl: "col_test"
+  dynamicColl: "col_dynamic"
   craterColl: "craters"
 
 osrm_routing:
   url: "http://127.0.0.1:5000"
 #  url: "https://router.project-osrm.org"
-  csv_file_name: "/home/lml/OSRM/updates.csv"
-  map_name: "/home/lml/OSRM/map/zhuhai-custom/zhuhai.osrm"
+  csv_file_name: "/home/lml/graduation/osrm_new/map/updates.csv"
+  map_name: "/home/lml/graduation/osrm_new/map/zhuhai/zhuhai.osrm"
 
 rabbitmq:
   url: "amqp://guest:guest@localhost:5672"

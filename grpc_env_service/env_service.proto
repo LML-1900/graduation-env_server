@@ -10,6 +10,8 @@ service EnvironmentData {
 
   rpc UpdateCrater(Crater) returns (UpdateCraterResponse){}
 
+  rpc UpdateObstacle(Obstacle) returns (UpdateObstacleResponse){}
+
   rpc GetRoutePoints(StartStopPoints) returns (RoutePoints){}
 
 }
@@ -59,5 +61,14 @@ message StartStopPoints {
 
 message RoutePoints {
   repeated Position pos = 1;
+}
+
+message Obstacle{
+  Position pos = 1;
+  string cause = 2;
+}
+
+message UpdateObstacleResponse{
+  string message = 1;
 }
 
