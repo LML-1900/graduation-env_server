@@ -40,6 +40,7 @@ message Crater{
   double width = 1;
   double depth = 2;
   Position pos = 3;
+  string craterID = 4;
 }
 
 message GetStaticDataRequest {
@@ -66,6 +67,7 @@ message RoutePoints {
 message Obstacle{
   Position pos = 1;
   string cause = 2;
+  string obstacleID = 3;
 }
 
 message UpdateObstacleResponse{

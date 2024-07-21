@@ -10,11 +10,7 @@
       <change beforePath="$PROJECT_DIR$/data/data_types.go" beforeDir="false" afterPath="$PROJECT_DIR$/data/data_types.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/grpc_env_service/env_service.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/grpc_env_service/env_service.pb.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/grpc_env_service/env_service.proto" beforeDir="false" afterPath="$PROJECT_DIR$/grpc_env_service/env_service.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/grpc_env_service/env_service_grpc.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/grpc_env_service/env_service_grpc.pb.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/server.go" beforeDir="false" afterPath="$PROJECT_DIR$/server/server.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service/dynamic_data.go" beforeDir="false" afterPath="$PROJECT_DIR$/service/dynamic_data.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/store/mongo_client.go" beforeDir="false" afterPath="$PROJECT_DIR$/store/mongo_client.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -56,9 +52,9 @@
     "RunOnceActivity.go.migrated.go.modules.settings": "true",
     "RunOnceActivity.go.modules.automatic.dependencies.download": "true",
     "RunOnceActivity.go.modules.go.list.on.any.changes.was.set": "true",
-    "git-widget-placeholder": "test/osrm__routing",
+    "git-widget-placeholder": "master",
     "go.import.settings.migrated": "true",
-    "last_opened_file_path": "/home/lml/graduation/env_middleware",
+    "last_opened_file_path": "/home/lml/graduation/env_server",
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",

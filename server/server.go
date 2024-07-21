@@ -6,14 +6,15 @@ import (
 	pb "env_server/grpc_env_service"
 	"env_server/service"
 	"fmt"
-	osrm "github.com/gojuno/go.osrm"
-	geo "github.com/paulmach/go.geo"
-	"github.com/spf13/viper"
-	"go.mongodb.org/mongo-driver/mongo"
 	"log"
 	"os"
 	"os/exec"
 	"time"
+
+	osrm "github.com/gojuno/go.osrm"
+	geo "github.com/paulmach/go.geo"
+	"github.com/spf13/viper"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type EnvDataServer struct {
@@ -66,8 +67,9 @@ func (s *EnvDataServer) UpdateCrater(ctx context.Context, crater *pb.Crater) (*p
 			Longitude: crater.Pos.Longitude,
 			Latitude:  crater.Pos.Latitude,
 		},
-		Depth: crater.Depth,
-		Width: crater.Width,
+		Depth:    crater.Depth,
+		Width:    crater.Width,
+		CraterID: crater.CraterID,
 	}
 	err := s.dynamicDataService.InsertCrater(newCrater)
 	if err != nil {
@@ -149,7 +151,8 @@ func (s *EnvDataServer) UpdateObstacle(ctx context.Context, obstacle *pb.Obstacl
 			Longitude: obstacle.Pos.Longitude,
 			Latitude:  obstacle.Pos.Latitude,
 		},
-		Cause: obstacle.Cause,
+		Cause:      obstacle.Cause,
+		ObstacleID: obstacle.ObstacleID,
 	}
 	err := s.dynamicDataService.InsertObstacle(newObstacle)
 	if err != nil {
