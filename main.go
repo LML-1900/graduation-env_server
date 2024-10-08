@@ -6,15 +6,16 @@ import (
 	"env_server/server"
 	"flag"
 	"fmt"
+	"log"
+	"net"
+	"os"
+	"strconv"
+
 	amqp "github.com/rabbitmq/amqp091-go"
 	"github.com/spf13/viper"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"google.golang.org/grpc"
-	"log"
-	"net"
-	"os"
-	"strconv"
 )
 
 //var (
@@ -79,15 +80,19 @@ func main() {
 	defer func(Conn *amqp.Connection) {
 		err := Conn.Close()
 		if err != nil {
-
+			log.Fatalf("fail to close rabbitmq connection: %v", err)
 		}
 	}(mq.Conn)
-	defer func(Ch *amqp.Channel) {
-		err := Ch.Close()
+	defer func(ProducerCh, ConsumerCh *amqp.Channel) {
+		err := ProducerCh.Close()
 		if err != nil {
-
+			log.Fatalf("fail to close producer channel: %v", err)
 		}
-	}(mq.Ch)
+		err = ConsumerCh.Close()
+		if err != nil {
+			log.Fatalf("fail to close consumer channel: %v", err)
+		}
+	}(mq.ProducerCh, mq.ConsumerCh)
 
 	// new an inset static data service
 	//staticDataService := service.NewAddStaticDataService(mongoClient)
@@ -129,6 +134,7 @@ func main() {
 	envDataServer := server.NewServer(mongoClient, mq, osrmURL)
 	pb.RegisterEnvironmentDataServer(s, envDataServer)
 	log.Printf("server listening at %v", lis.Addr())
+	go mq.ConsumeObstacles()
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
 	}

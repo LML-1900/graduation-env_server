@@ -7,7 +7,6 @@ import (
 	"env_server/service"
 	"fmt"
 	"log"
-	"os"
 	"os/exec"
 	"time"
 
@@ -81,6 +80,7 @@ func (s *EnvDataServer) UpdateCrater(ctx context.Context, crater *pb.Crater) (*p
 }
 
 func (s *EnvDataServer) GetRoutePoints(ctx context.Context, points *pb.StartStopPoints) (*pb.RoutePoints, error) {
+	fmt.Printf("GetRoutePoints: Start: (%f, %f); Stop: (%f, %f)\n", points.Start.Longitude, points.Start.Latitude, points.End.Longitude, points.Start.Latitude)
 	resp, err := s.osrmClient.Route(ctx, osrm.RouteRequest{
 		Profile: "car", // seems useless
 		Coordinates: osrm.NewGeometryFromPointSet(geo.PointSet{
@@ -162,7 +162,6 @@ func (s *EnvDataServer) UpdateObstacle(ctx context.Context, obstacle *pb.Obstacl
 	// asynchronously update road network
 	go func() {
 		s.AddObstacle(newObstacle.Position)
-		s.OSRMUpdateRoadNetwork()
 	}()
 	return &pb.UpdateObstacleResponse{Message: "ok"}, nil
 }
@@ -205,21 +204,11 @@ func (s *EnvDataServer) AddObstacle(position data.LonLatPosition) {
 	}
 	// write nodes into csv file
 	if len(obstacleId) >= 2 {
-		file_name := viper.GetString("osrm_routing.csv_file_name")
-		file, err := os.OpenFile(file_name, os.O_APPEND|os.O_WRONLY, 0644)
-		if err != nil {
-			file, err = os.Create(file_name) // Create if it doesn't exist
-			if err != nil {
-				fmt.Println("Error creating file:", err)
-				return
-			}
-		}
-		defer file.Close()
-		// write in two directions
-		fmt.Fprintf(file, "%d,%d,%d\n", obstacleId[0], obstacleId[1], 0)
-		fmt.Fprintf(file, "%d,%d,%d\n", obstacleId[1], obstacleId[0], 0)
+		s.mq.BroadCastObstacles(data.OSRM_Obstacle{
+			StartID: obstacleId[0],
+			StopID:  obstacleId[1],
+		})
 	}
-
 }
 
 func (s *EnvDataServer) OSRMUpdateRoadNetwork() {

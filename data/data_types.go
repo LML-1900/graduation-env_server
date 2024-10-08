@@ -26,3 +26,8 @@ type Obstacle struct {
 	Cause      string
 	ObstacleID string `bson:"obstacle_id" json:"obstacle_id"`
 }
+
+type OSRM_Obstacle struct {
+	StartID uint64
+	StopID  uint64
+}
